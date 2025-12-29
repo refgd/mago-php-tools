@@ -1,0 +1,243 @@
+{
+    "name": "mago-php-tools",
+    "displayName": "Mago PHP Tools",
+    "description": "Format and lint PHP using mago, auto-detecting mago.toml in parent folders.",
+    "version": "0.0.2",
+    "publisher": "refgd",
+    "license": "MIT",
+    "engines": {
+        "vscode": "^1.107.0"
+    },
+    "categories": [
+        "Formatters",
+        "Linters"
+    ],
+    "icon": "resources/icon.png",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/refgd/mago-php-tools.git"
+    },
+    "activationEvents": [
+        "onLanguage:php"
+    ],
+    "main": "./dist/extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "magoPhpTools.formatFile",
+                "title": "Mago: Format Current PHP File"
+            },
+            {
+                "command": "magoPhpTools.lintFile",
+                "title": "Mago: Lint Current PHP File"
+            },
+            {
+                "command": "magoPhpTools.previewFix",
+                "title": "Mago: Preview Fix"
+            },
+            {
+                "command": "magoPhpTools.analyze",
+                "title": "Mago: Analyze Whole Project",
+                "icon": "$(checklist)"
+            },
+            {
+                "command": "magoPhpTools.analyze.refresh",
+                "title": "Mago: Refresh Analyze",
+                "icon": "$(refresh)"
+            },
+            {
+                "command": "magoPhpTools.analyze.clear",
+                "title": "Mago: Clear Analyze Results",
+                "icon": "$(clear-all)"
+            },
+            {
+                "command": "magoPhpTools.analyze.openFile",
+                "title": "Mago: Open Analyze File",
+                "icon": "$(file)"
+            },
+            {
+                "command": "magoPhpTools.analyze.openIssue",
+                "title": "Mago: Open Analyze Issue",
+                "icon": "$(go-to-file)"
+            },
+            {
+                "command": "magoPhpTools.lintProject",
+                "title": "Mago: Lint Whole Project",
+                "icon": "$(checklist)"
+            },
+            {
+                "command": "magoPhpTools.lintProject.refresh",
+                "title": "Mago: Refresh Project Lint",
+                "icon": "$(refresh)"
+            },
+            {
+                "command": "magoPhpTools.lintProject.clear",
+                "title": "Mago: Clear Project Lint",
+                "icon": "$(clear-all)"
+            },
+            {
+                "command": "magoPhpTools.lintProject.openFile",
+                "title": "Mago: Open Lint File",
+                "icon": "$(file)"
+            },
+            {
+                "command": "magoPhpTools.lintProject.openIssue",
+                "title": "Mago: Open Lint Issue",
+                "icon": "$(go-to-file)"
+            },
+            {
+                "command": "magoPhpTools.formatIgnore",
+                "title": "Mago: Format Ignore Selection"
+            }
+        ],
+        "viewsContainers": {
+            "activitybar": [
+                {
+                    "id": "magoPhpTools",
+                    "title": "Mago PHP Tools",
+                    "icon": "resources/icon.svg"
+                }
+            ]
+        },
+        "views": {
+            "magoPhpTools": [
+                {
+                    "id": "magoPhpTools.lintProjectView",
+                    "name": "Mago Lint",
+                    "icon": "resources/icon.svg"
+                },
+                {
+                    "id": "magoPhpTools.analyzeView",
+                    "name": "Mago Analyze",
+                    "icon": "resources/icon.svg"
+                }
+            ]
+        },
+        "submenus": [
+            {
+                "id": "magoPhpTools.submenu",
+                "label": "Mago"
+            }
+        ],
+        "menus": {
+            "editor/context": [
+                {
+                    "command": "magoPhpTools.formatIgnore",
+                    "when": "editorLangId == php && editorHasSelection && editorTextFocus",
+                    "group": "1_mago_php_menu@1"
+                },
+                {
+                    "submenu": "magoPhpTools.submenu",
+                    "when": "editorLangId == php",
+                    "group": "1_mago_php_menu@2"
+                }
+            ],
+            "magoPhpTools.submenu": [
+                {
+                    "command": "magoPhpTools.formatFile",
+                    "when": "editorLangId == php",
+                    "group": "1_mago_php_submenu@1"
+                },
+                {
+                    "command": "magoPhpTools.lintFile",
+                    "when": "editorLangId == php",
+                    "group": "1_mago_php_submenu@2"
+                }
+            ],
+            "view/title": [
+                {
+                    "command": "magoPhpTools.lintProject.refresh",
+                    "when": "view == magoPhpTools.lintProjectView",
+                    "group": "1_mago_lint_nav@2"
+                },
+                {
+                    "command": "magoPhpTools.lintProject.clear",
+                    "when": "view == magoPhpTools.lintProjectView && magoLintProject.visible",
+                    "group": "1_mago_lint_nav@3"
+                },
+                {
+                    "command": "magoPhpTools.analyze.refresh",
+                    "when": "view == magoPhpTools.analyzeView",
+                    "group": "1_mago_ana_nav@2"
+                },
+                {
+                    "command": "magoPhpTools.analyze.clear",
+                    "when": "view == magoPhpTools.analyzeView && magoAnalyze.visible",
+                    "group": "1_mago_ana_nav@3"
+                }
+            ],
+            "commandPalette": [
+                {
+                    "command": "magoPhpTools.previewFix",
+                    "when": "false"
+                },
+                {
+                    "command": "magoPhpTools.analyze.refresh",
+                    "when": "false"
+                },
+                {
+                    "command": "magoPhpTools.analyze.clear",
+                    "when": "false"
+                },
+                {
+                    "command": "magoPhpTools.analyze.openFile",
+                    "when": "false"
+                },
+                {
+                    "command": "magoPhpTools.analyze.openIssue",
+                    "when": "false"
+                },
+                {
+                    "command": "magoPhpTools.lintProject.openFile",
+                    "when": "false"
+                },
+                {
+                    "command": "magoPhpTools.lintProject.openIssue",
+                    "when": "false"
+                },
+                {
+                    "command": "magoPhpTools.lintProject.refresh",
+                    "when": "false"
+                },
+                {
+                    "command": "magoPhpTools.lintProject.clear",
+                    "when": "false"
+                },
+                {
+                    "command": "magoPhpTools.formatIgnore",
+                    "when": "false"
+                }
+            ]
+        },
+        "configuration": {
+            "title": "Mago PHP Tools",
+            "properties": {
+                "magoPhpTools.magoPath": {
+                    "type": "string",
+                    "default": "mago",
+                    "description": "Path to the mago executable."
+                },
+                "magoPhpTools.formatOnSave": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Format PHP files on save using mago."
+                },
+                "magoPhpTools.lintOnSave": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Lint PHP files on save using mago."
+                }
+            }
+        }
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run build",
+        "build": "tsc -p .",
+        "watch": "tsc -watch -p ."
+    },
+    "devDependencies": {
+        "@types/node": "^20.19.27",
+        "@types/vscode": "^1.107.0",
+        "typescript": "^5.9.3"
+    }
+}
