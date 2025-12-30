@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.0.4]
+- Minor fixes and improvements
+
 ## [0.0.3]
 - Refactored core architecture to improve scalability and maintainability
 - Updated documentation and usage examples in `README.md`

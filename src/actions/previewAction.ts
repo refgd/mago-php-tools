@@ -31,8 +31,7 @@ class MagoDiffProvider implements vscode.TextDocumentContentProvider {
     }
 }
 
-// single instance (registered in extension.ts)
-export const diffProvider = new MagoDiffProvider();
+const diffProvider = new MagoDiffProvider();
 
 function safeId(s: string) {
     return s.replace(/[^\w.-]+/g, "_");
@@ -73,7 +72,7 @@ function makeLeftUri(target: vscode.Uri, fix: MagoFix): vscode.Uri {
  * - left: fixed code (virtual, read-only)
  * - right: real file (editable)
  */
-export async function previewFix(uri: vscode.Uri, fixId: string): Promise<void> {
+async function previewFix(uri: vscode.Uri, fixId: string): Promise<void> {
     const doc = await vscode.workspace.openTextDocument(uri);
 
     const fix = getFixById(doc, fixId);
@@ -101,4 +100,14 @@ export async function previewFix(uri: vscode.Uri, fixId: string): Promise<void> 
 
     // Optional: focus right side (real file) so editing is easy
     // await vscode.commands.executeCommand("workbench.action.focusSecondEditorGroup");
+}
+
+export function registerPreviewAction(context: vscode.ExtensionContext): void {
+    context.subscriptions.push(
+        vscode.workspace.registerTextDocumentContentProvider("mago-diff", diffProvider)
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand("magoPhpTools.previewFix", previewFix)
+    );
 }

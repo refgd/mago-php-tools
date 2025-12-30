@@ -1,6 +1,15 @@
 import * as vscode from "vscode";
 
-export async function wrapSelectionWithMagoIgnore(): Promise<void> {
+export function registerFormatIgnore(context: vscode.ExtensionContext): void {
+    context.subscriptions.push(
+        vscode.commands.registerCommand(
+            "magoPhpTools.formatIgnore",
+            async () => wrapSelectionWithMagoIgnore()
+        )
+    );
+}
+
+async function wrapSelectionWithMagoIgnore(): Promise<void> {
     const editor = vscode.window.activeTextEditor;
     if (!editor) return;
 

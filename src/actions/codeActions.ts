@@ -1,7 +1,17 @@
 import * as vscode from "vscode";
 import { getFixByRange } from "../shared/mago/store";
 
-export class MagoCodeActionProvider implements vscode.CodeActionProvider {
+export function registerCodeActions(context: vscode.ExtensionContext): void {
+    context.subscriptions.push(
+        vscode.languages.registerCodeActionsProvider(
+            { language: "php" },
+            new MagoCodeActionProvider(),
+            { providedCodeActionKinds: MagoCodeActionProvider.providedKinds }
+        )
+    );
+}
+
+class MagoCodeActionProvider implements vscode.CodeActionProvider {
     static readonly providedKinds = [vscode.CodeActionKind.QuickFix];
 
     provideCodeActions(
@@ -13,8 +23,8 @@ export class MagoCodeActionProvider implements vscode.CodeActionProvider {
 
         for (const diag of context.diagnostics) {
             const fix = getFixByRange(document, diag.range);
-            if(fix){
-                if(fix.edits){
+            if (fix) {
+                if (fix.edits.length > 0) {
                     // Apply fix
                     const apply = new vscode.CodeAction(
                         `Mago: Fix "${fix.code ?? "issue"}"`,
@@ -43,7 +53,7 @@ export class MagoCodeActionProvider implements vscode.CodeActionProvider {
 
                     actions.push(apply, preview);
                 }
-                
+
                 // ---- Suppress with @mago-expect ----
                 const suppressCode = `${fix.category ?? "lint"}:${fix.code}`;
                 const suppress = new vscode.CodeAction(

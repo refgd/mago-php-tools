@@ -5,8 +5,30 @@ import {
 } from "../shared/utils";
 import { runMagoCommand } from "../shared/mago/run";
 
+export function registerFormatFile(context: vscode.ExtensionContext): void {
+    context.subscriptions.push(
+        vscode.commands.registerCommand("magoPhpTools.formatFile", async () => {
+            const editor = vscode.window.activeTextEditor;
+            if (!editor) return;
+            await formatFile(editor.document, "manual", context);
+        })
+    );
+
+    // ✅ Format as part of save (file remains saved)
+    context.subscriptions.push(
+        vscode.workspace.onWillSaveTextDocument((event) => {
+            const doc = event.document;
+
+            const cfg = getConfig();
+            if (!cfg.formatOnSave) return;
+
+            event.waitUntil(getFormatEdits(doc, "auto", context));
+        })
+    );
+}
+
 /** Used for onWillSave: returns edits that VS Code will apply during save. */
-export async function getFormatEdits(
+async function getFormatEdits(
     doc: vscode.TextDocument,
     trigger: TriggerType = "auto",
     context: vscode.ExtensionContext
@@ -41,7 +63,7 @@ export async function getFormatEdits(
 }
 
 /** Manual command formatting (applies edit immediately; leaves doc dirty until user saves). */
-export async function formatDocument(
+async function formatFile(
     doc: vscode.TextDocument,
     trigger: TriggerType = "auto",
     context: vscode.ExtensionContext

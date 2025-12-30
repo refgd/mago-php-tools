@@ -12,7 +12,7 @@ const FIX_BY_FILE = new Map<string, Map<string, MagoFix>>();
  * Must be called once during extension activation.
  * Handles lifecycle + disposal automatically.
  */
-export function registerMagoStore(context: vscode.ExtensionContext): void {
+export function registerDiagnostic(context: vscode.ExtensionContext): void {
     if (DIAGNOSTIC_COLLECTION) {
         return; // already registered
     }

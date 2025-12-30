@@ -23,7 +23,7 @@ export type ReportViewSpec = {
     cmdOpenIssue: string;
 
     // context keys used for view/title buttons and visibility
-    visibleContextKey: string;
+    hasrunContextKey: string;
 
     // labels
     viewTitle: string; // for status messages etc.
@@ -232,7 +232,7 @@ class ReportTreeProvider implements vscode.TreeDataProvider<Node> {
         this.docCache.clear();
         this.decorations.clear();
         this._onDidChangeTreeData.fire();
-        vscode.commands.executeCommand("setContext", this.spec.visibleContextKey, false);
+        vscode.commands.executeCommand("setContext", this.spec.hasrunContextKey, false);
     }
 
     setResults(magoRoot: string | null, issues: FileIssue[]) {
@@ -241,7 +241,7 @@ class ReportTreeProvider implements vscode.TreeDataProvider<Node> {
         this.issues = issues;
         this.decorations.setIssues(issues);
         this._onDidChangeTreeData.fire();
-        vscode.commands.executeCommand("setContext", this.spec.visibleContextKey, true);
+        vscode.commands.executeCommand("setContext", this.spec.hasrunContextKey, true);
     }
 
     clear() {
@@ -251,7 +251,7 @@ class ReportTreeProvider implements vscode.TreeDataProvider<Node> {
         this.docCache.clear();
         this.decorations.clear();
         this._onDidChangeTreeData.fire();
-        vscode.commands.executeCommand("setContext", this.spec.visibleContextKey, false);
+        vscode.commands.executeCommand("setContext", this.spec.hasrunContextKey, false);
     }
 
     getTreeItem(element: Node): vscode.TreeItem {

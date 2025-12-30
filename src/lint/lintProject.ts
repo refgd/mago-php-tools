@@ -1,12 +1,10 @@
 import * as vscode from "vscode";
 import { registerMagoReportView, ReportViewSpec } from "../shared/reportView";
 
-export const MAGO_LINT_PROJECT_VIEW_ID = "magoPhpTools.lintProjectView";
-
-export function registerLintProjectView(context: vscode.ExtensionContext): void {
+export function registerLintProject(context: vscode.ExtensionContext): void {
   const spec: ReportViewSpec = {
     kind: "lint",
-    viewId: MAGO_LINT_PROJECT_VIEW_ID,
+    viewId: "magoPhpTools.lintProjectView",
     scheme: "mago-lint-project",
 
     cmdRun: "magoPhpTools.lintProject",
@@ -15,7 +13,7 @@ export function registerLintProjectView(context: vscode.ExtensionContext): void 
     cmdOpenFile: "magoPhpTools.lintProject.openFile",
     cmdOpenIssue: "magoPhpTools.lintProject.openIssue",
 
-    visibleContextKey: "magoLintProject.visible",
+    hasrunContextKey: "magoLintProject.hasrun",
     viewTitle: "Mago Lint",
 
     baseArgs: ["lint"]

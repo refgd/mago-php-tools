@@ -2,7 +2,7 @@
     "name": "mago-php-tools",
     "displayName": "Mago PHP Tools",
     "description": "Format and lint PHP using mago, auto-detecting mago.toml in parent folders.",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "publisher": "refgd",
     "license": "MIT",
     "engines": {
@@ -36,27 +36,27 @@
                 "title": "Mago: Preview Fix"
             },
             {
-                "command": "magoPhpTools.analyze",
+                "command": "magoPhpTools.analyzeProject",
                 "title": "Mago: Analyze Project",
                 "icon": "$(checklist)"
             },
             {
-                "command": "magoPhpTools.analyze.refresh",
+                "command": "magoPhpTools.analyzeProject.refresh",
                 "title": "Mago: Refresh Analyze",
                 "icon": "$(refresh)"
             },
             {
-                "command": "magoPhpTools.analyze.clear",
+                "command": "magoPhpTools.analyzeProject.clear",
                 "title": "Mago: Clear Analyze Results",
                 "icon": "$(clear-all)"
             },
             {
-                "command": "magoPhpTools.analyze.openFile",
+                "command": "magoPhpTools.analyzeProject.openFile",
                 "title": "Mago: Open Analyze File",
                 "icon": "$(file)"
             },
             {
-                "command": "magoPhpTools.analyze.openIssue",
+                "command": "magoPhpTools.analyzeProject.openIssue",
                 "title": "Mago: Open Analyze Issue",
                 "icon": "$(go-to-file)"
             },
@@ -107,7 +107,7 @@
                     "icon": "resources/icon.svg"
                 },
                 {
-                    "id": "magoPhpTools.analyzeView",
+                    "id": "magoPhpTools.analyzeProjectView",
                     "name": "Mago Analyze",
                     "icon": "resources/icon.svg"
                 }
@@ -152,17 +152,17 @@
                 },
                 {
                     "command": "magoPhpTools.lintProject.clear",
-                    "when": "view == magoPhpTools.lintProjectView && magoLintProject.visible",
+                    "when": "view == magoPhpTools.lintProjectView && magoLintProject.hasrun",
                     "group": "1_mago_lint_nav@3"
                 },
                 {
-                    "command": "magoPhpTools.analyze.refresh",
-                    "when": "view == magoPhpTools.analyzeView",
+                    "command": "magoPhpTools.analyzeProject.refresh",
+                    "when": "view == magoPhpTools.analyzeProjectView",
                     "group": "1_mago_ana_nav@2"
                 },
                 {
-                    "command": "magoPhpTools.analyze.clear",
-                    "when": "view == magoPhpTools.analyzeView && magoAnalyze.visible",
+                    "command": "magoPhpTools.analyzeProject.clear",
+                    "when": "view == magoPhpTools.analyzeProjectView && magoAnalyzeProject.hasrun",
                     "group": "1_mago_ana_nav@3"
                 }
             ],
@@ -172,19 +172,19 @@
                     "when": "false"
                 },
                 {
-                    "command": "magoPhpTools.analyze.refresh",
+                    "command": "magoPhpTools.analyzeProject.refresh",
                     "when": "false"
                 },
                 {
-                    "command": "magoPhpTools.analyze.clear",
+                    "command": "magoPhpTools.analyzeProject.clear",
                     "when": "false"
                 },
                 {
-                    "command": "magoPhpTools.analyze.openFile",
+                    "command": "magoPhpTools.analyzeProject.openFile",
                     "when": "false"
                 },
                 {
-                    "command": "magoPhpTools.analyze.openIssue",
+                    "command": "magoPhpTools.analyzeProject.openIssue",
                     "when": "false"
                 },
                 {
