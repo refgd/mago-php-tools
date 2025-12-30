@@ -2,7 +2,7 @@
     "name": "mago-php-tools",
     "displayName": "Mago PHP Tools",
     "description": "Format and lint PHP using mago, auto-detecting mago.toml in parent folders.",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "publisher": "refgd",
     "license": "MIT",
     "engines": {

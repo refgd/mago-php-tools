@@ -18,7 +18,7 @@ export function registerDiagnostic(context: vscode.ExtensionContext): void {
     }
 
     DIAGNOSTIC_COLLECTION =
-        vscode.languages.createDiagnosticCollection("mago");
+        vscode.languages.createDiagnosticCollection("magoPhpTools");
 
     context.subscriptions.push(DIAGNOSTIC_COLLECTION);
 }

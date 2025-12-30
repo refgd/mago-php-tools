@@ -148,7 +148,7 @@ function issueBadge(level?: string, hasSafeFix?: boolean): {
 
 // ---------- doc helpers ----------
 async function openDocByMagoPath(filePath: string): Promise<vscode.TextDocument> {
-    const uri = vscode.Uri.parse(`file://${filePath}`);
+    const uri = vscode.Uri.file(filePath);
     return vscode.workspace.openTextDocument(uri);
 }
 

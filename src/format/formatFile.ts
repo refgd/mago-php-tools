@@ -10,7 +10,10 @@ export function registerFormatFile(context: vscode.ExtensionContext): void {
         vscode.commands.registerCommand("magoPhpTools.formatFile", async () => {
             const editor = vscode.window.activeTextEditor;
             if (!editor) return;
-            await formatFile(editor.document, "manual", context);
+            const doc = editor.document;
+            if (doc.languageId !== "php") return;
+
+            await formatFile(doc, "manual", context);
         })
     );
 
@@ -18,6 +21,7 @@ export function registerFormatFile(context: vscode.ExtensionContext): void {
     context.subscriptions.push(
         vscode.workspace.onWillSaveTextDocument((event) => {
             const doc = event.document;
+            if (doc.languageId !== "php") return;
 
             const cfg = getConfig();
             if (!cfg.formatOnSave) return;
@@ -41,7 +45,7 @@ async function getFormatEdits(
     const stderr = res.stderr?.trim() ?? "";
 
     if (stderr) {
-        if(!(trigger == 'auto' && cfg.lintOnSave && /Failed to parse/i.test(stderr))){
+        if (!(trigger == 'auto' && cfg.lintOnSave && /Failed to parse/i.test(stderr))) {
             vscode.window.showErrorMessage(stderr);
             return [];
         }

@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.0.5]
+- Clear diagnostics when files are closed.
+
 ## [0.0.4]
 - Minor fixes and improvements
 

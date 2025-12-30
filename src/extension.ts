@@ -16,7 +16,7 @@ import { registerPreviewAction } from "./actions/previewAction";
 
 export function activate(context: vscode.ExtensionContext) {
     registerDiagnostic(context);
-    
+
     registerFormatFile(context);
 
     registerLintFile(context);
