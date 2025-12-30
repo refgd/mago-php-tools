@@ -1,17 +1,21 @@
 import * as vscode from "vscode";
-import { getConfig, isPhpDoc, saveIfDirty } from "./utils";
-import { formatDocument, getFormatEdits } from "./format";
-import { lintDocument } from "./lint";
-import { MagoCodeActionProvider } from "./codeActions";
-import { diffProvider, previewFix } from "./preview";
-import { registerAnalyzeView } from "./analyze";
-import { wrapSelectionWithMagoIgnore } from "./formatIgnore";
-import { registerLintProjectView } from "./lintProject";
-import { DIAGNOSTIC_COLLECTION } from "./magoRunner";
+import { getConfig, saveIfDirty } from "./shared/utils";
+import { clearDiagnosticsAll, registerMagoStore } from "./shared/mago/store";
+
+import { formatDocument, getFormatEdits } from "./format/format";
+import { wrapSelectionWithMagoIgnore } from "./format/formatIgnore";
+
+import { lintDocument } from "./lint/lint";
+import { registerLintProjectView } from "./lint/lintProject";
+
+import { MagoCodeActionProvider } from "./actions/codeActions";
+import { diffProvider, previewFix } from "./actions/previewAction";
+
+import { registerAnalyzeView } from "./analyze/analyze";
 
 export function activate(context: vscode.ExtensionContext) {
 
-    context.subscriptions.push(DIAGNOSTIC_COLLECTION);
+    registerMagoStore(context);
 
     context.subscriptions.push(
         vscode.workspace.registerTextDocumentContentProvider("mago-diff", diffProvider)
@@ -64,7 +68,6 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
         vscode.workspace.onWillSaveTextDocument((event) => {
             const doc = event.document;
-            if (!isPhpDoc(doc)) return;
 
             const cfg = getConfig();
             if (!cfg.formatOnSave) return;
@@ -76,8 +79,6 @@ export function activate(context: vscode.ExtensionContext) {
     // Lint after save is fine (doesn't dirty the file)
     context.subscriptions.push(
         vscode.workspace.onDidSaveTextDocument(async (doc) => {
-            if (!isPhpDoc(doc)) return;
-
             const cfg = getConfig();
             if (cfg.lintOnSave) await lintDocument(doc, "auto", context);
         })
@@ -85,5 +86,5 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 export function deactivate() {
-    DIAGNOSTIC_COLLECTION.clear();
+    clearDiagnosticsAll();
 }

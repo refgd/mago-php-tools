@@ -1,8 +1,11 @@
 import * as vscode from "vscode";
 
-import { showStatusMessage } from "./statusBar";
-import { isPhpDoc, TriggerType } from "./utils";
-import { clearDiagnosticsAndFixes, runMagoAndParse, setDiagnostics } from "./magoRunner";
+import { showStatusMessage } from "../shared/statusBar";
+import { fileKey, isPhpDoc, TriggerType } from "../shared/utils";
+
+import { clearDiagnosticsByUri, setDiagnostics } from "../shared/mago/store";
+import { runMagoAndParse } from "../shared/mago/run";
+import { buildIssuesDiagnostic } from "../shared/mago/parse";
 
 export async function lintDocument(
     doc: vscode.TextDocument,
@@ -11,7 +14,7 @@ export async function lintDocument(
 ): Promise<void> {
     if (!isPhpDoc(doc)) return;
 
-    clearDiagnosticsAndFixes(doc.uri)
+    clearDiagnosticsByUri(doc.uri)
 
     const res = await runMagoAndParse(doc, ["lint"], context, true);
     if(res.code !== 0){
@@ -19,11 +22,12 @@ export async function lintDocument(
         return;
     }
 
-    const fileIssue = res.issues?.get(doc.uri.fsPath);
+    const fileIssue = res.issues?.get(fileKey(doc.uri));
     if(!fileIssue || fileIssue.issues.length === 0){
         showStatusMessage("✔ Mago: No issues found");
         return;
     }
 
-    setDiagnostics(doc.uri, fileIssue.diags);
+    const diags = buildIssuesDiagnostic(doc, fileIssue.issues);
+    setDiagnostics(doc.uri, diags);
 }

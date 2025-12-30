@@ -1,6 +1,8 @@
 import * as vscode from "vscode";
 import * as path from "path";
-import { getFixById, MagoFix } from "./magoRunner";
+import { fileKey } from "../shared/utils";
+import { MagoFix } from "../shared/mago/types";
+import { getFixById } from "../shared/mago/store";
 
 /**
  * Read-only virtual document provider for diff-left (fixed code).
@@ -15,17 +17,17 @@ class MagoDiffProvider implements vscode.TextDocumentContentProvider {
     private content = new Map<string, string>();
 
     set(uri: vscode.Uri, text: string) {
-        this.content.set(uri.fsPath, text);
+        this.content.set(fileKey(uri), text);
         this._onDidChange.fire(uri);
     }
 
     clear(uri: vscode.Uri) {
-        this.content.delete(uri.fsPath);
+        this.content.delete(fileKey(uri));
         this._onDidChange.fire(uri);
     }
 
     provideTextDocumentContent(uri: vscode.Uri): string {
-        return this.content.get(uri.fsPath) ?? "";
+        return this.content.get(fileKey(uri)) ?? "";
     }
 }
 
@@ -55,7 +57,7 @@ function computePatchedText(doc: vscode.TextDocument, fix: MagoFix): string {
 }
 
 function makeLeftUri(target: vscode.Uri, fix: MagoFix): vscode.Uri {
-    const base = safeId(path.posix.basename(target.path || "file.php"));
+    const base = safeId(path.basename(target.path || "file.php"));
     const rule = safeId(fix.code ?? "fix");
     const id = safeId(fix.id).slice(0, 32);
 

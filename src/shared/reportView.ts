@@ -1,5 +1,8 @@
 import * as vscode from "vscode";
-import { buildIssueDiagnostic, FileIssue, MagoIssue, runMagoAndParse, sameFile, setDiagnostics } from "./magoRunner";
+import { FileIssue, MagoIssue } from "./mago/types";
+import { buildIssuesDiagnostic, sameFile } from "./mago/parse";
+import { setDiagnostics } from "./mago/store";
+import { runMagoAndParse } from "./mago/run";
 
 export type ReportKind = "analyze" | "lint";
 
@@ -70,10 +73,10 @@ function decodeIssueUri(
 }
 
 // ---------- display helpers ----------
-function relLabel(absPosixPath: string, magoRoot: string | null): string {
-    if (!magoRoot) return absPosixPath;
+function relLabel(absPath: string, magoRoot: string | null): string {
+    if (!magoRoot) return absPath;
     const root = magoRoot.endsWith("/") ? magoRoot : magoRoot + "/";
-    return absPosixPath.startsWith(root) ? absPosixPath.slice(root.length) : absPosixPath;
+    return absPath.startsWith(root) ? absPath.slice(root.length) : absPath;
 }
 function buildTooltip(issue: MagoIssue): string {
     const lines: string[] = [];
@@ -150,14 +153,18 @@ async function openDocByMagoPath(filePath: string): Promise<vscode.TextDocument>
 }
 
 async function revealSingleIssue(doc: vscode.TextDocument, issue: MagoIssue): Promise<void> {
-    const diagnostic = buildIssueDiagnostic(doc, issue);
+    const diagnostics = buildIssuesDiagnostic(doc, [issue]);
 
     // show ONLY this issue in Problems + expose its safe fix to CodeActions
-    setDiagnostics(doc.uri, [diagnostic]);
+    setDiagnostics(doc.uri, diagnostics);
 
-    const editor = await vscode.window.showTextDocument(doc, { preview: false });
-    editor.selection = new vscode.Selection(diagnostic.range.start, diagnostic.range.end);
-    editor.revealRange(diagnostic.range, vscode.TextEditorRevealType.InCenter);
+    if(diagnostics.length > 0){
+        const diagnostic = diagnostics[0];
+        
+        const editor = await vscode.window.showTextDocument(doc, { preview: false });
+        editor.selection = new vscode.Selection(diagnostic.range.start, diagnostic.range.end);
+        editor.revealRange(diagnostic.range, vscode.TextEditorRevealType.InCenter);
+    }
 }
 
 // ---------- Decorations ----------

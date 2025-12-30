@@ -1,10 +1,9 @@
 import * as vscode from "vscode";
 import {
     getConfig,
-    isPhpDoc,
     TriggerType
-} from "./utils";
-import { runMagoCommand } from "./magoRunner";
+} from "../shared/utils";
+import { runMagoCommand } from "../shared/mago/run";
 
 /** Used for onWillSave: returns edits that VS Code will apply during save. */
 export async function getFormatEdits(
@@ -12,8 +11,6 @@ export async function getFormatEdits(
     trigger: TriggerType = "auto",
     context: vscode.ExtensionContext
 ): Promise<vscode.TextEdit[]> {
-    if (!isPhpDoc(doc)) return [];
-
     const cfg = getConfig();
     const filePath = doc.uri.fsPath;
     const input = doc.getText();

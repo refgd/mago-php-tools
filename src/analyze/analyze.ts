@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { registerMagoReportView, ReportViewSpec } from "./reportView";
+import { registerMagoReportView, ReportViewSpec } from "../shared/reportView";
 
 export const MAGO_ANALYZE_VIEW_ID = "magoPhpTools.analyzeView";
 

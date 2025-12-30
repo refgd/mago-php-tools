@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { getFixByRange } from "./magoRunner";
+import { getFixByRange } from "../shared/mago/store";
 
 export class MagoCodeActionProvider implements vscode.CodeActionProvider {
     static readonly providedKinds = [vscode.CodeActionKind.QuickFix];

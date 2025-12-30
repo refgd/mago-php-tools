@@ -6,6 +6,8 @@ export function isPhpDoc(doc: vscode.TextDocument): boolean {
     return doc.languageId === "php" && doc.uri.scheme === "file";
 }
 
+export const fileKey = (uri: vscode.Uri) => uri.fsPath;
+
 export function getConfig() {
     const cfg = vscode.workspace.getConfiguration("magoPhpTools");
     return {

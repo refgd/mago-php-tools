@@ -1,61 +1,61 @@
-# Mago PHP Tools (VS Code Extension)
+# Mago PHP Tools
 
-A Visual Studio Code extension that integrates **[mago](https://github.com/carthage-software/mago)** into your PHP workflow.
+Format, lint, and analyze PHP in VS Code using the **Mago** CLI, with automatic `mago.toml` detection.
 
-It provides **formatting**, **linting**, and **analysis** with accurate ranges, safe auto-fix support, and a dedicated **Analyze panel** similar to VS Code’s Problems / Source Control views.
-
----
+![Lint, Diagnostics, and Quick Fixes](resources/screen.png)
 
 ## Features
 
-### ✅ Format PHP (mago fmt)
+- **Format current PHP file** (`mago fmt`)
+- **Lint current PHP file** (`mago lint`)
+- Optional **format on save** and **lint on save**
+- **Lint project** with results in an Explorer view
+- **Analyze project** with focused diagnostics per issue
 
-* Supports:
 
-  * **Format on Save**
-  * **Format Document** command
-  * **Right-click → Format Document**
+## Requirements
 
----
+- **Mago CLI** installed and accessible (or configure `magoPhpTools.magoPath`)
+- A `mago.toml` file is **required for project commands**
 
-### ✅ Lint PHP (mago lint)
 
-* Supports:
+## Project Root & Config Resolution
 
-  * On save linting
-  * Manual lint command
-* Diagnostics appear in:
+When running commands, the extension walks up from the active file until it finds `mago.toml`.  
+That folder is used as the **project root**.
 
-  * Editor gutter
-  * Problems panel
-* Detects **safe fixes** from mago output
+**Bundled config behavior:**
+- ✅ Format / Lint current file → fallback to bundled config
+- ❌ Lint Project / Analyze Project → requires project `mago.toml`
 
----
+> Monorepo tip: open a PHP file inside the target project before running project commands.
 
-### ✅ Auto-Fix Support
 
-* Safe fixes are detected from mago’s output
+## Usage
 
----
+**Format / Lint current file**
+- Command Palette → `Mago: Format Current PHP File`
+- Command Palette → `Mago: Lint Current PHP File`
+- Or use the editor context menu
+- Or enable on-save options
 
-### ✅ Analyze View (mago analyze)
+**Lint / Analyze project**
+- Command Palette → `Mago: Lint Project`
+- Command Palette → `Mago: Analyze Project`
+- View results under **Mago PHP Tools** in the Explorer
 
-A dedicated **Analyze panel** (Activity Bar view), similar to Source Control:
 
-* Groups issues **by file**
-* Files are displayed **relative to mago root**
+## Commands
 
-#### Badges
+| Command | Description |
+|------|-----------|
+| Mago: Format Current PHP File | Format the active file |
+| Mago: Lint Current PHP File | Lint the active file |
+| Mago: Lint Project | Lint the project |
+| Mago: Analyze Project | Analyze the project |
 
-  * `E` = Error
-  * `W` = Warning
-  * `I` = Info / Note
-  * `H` = Help
-  * `E*`, `W*`, etc. = safe fix available
 
----
-
-## Configuration
+## Settings
 
 ```json
 {
@@ -64,44 +64,6 @@ A dedicated **Analyze panel** (Activity Bar view), similar to Source Control:
   "magoPhpTools.lintOnSave": true
 }
 ```
-
-| Setting                     | Description               |
-| --------------------------- | ------------------------- |
-| `magoPhpTools.magoPath`     | Path to the `mago` binary |
-| `magoPhpTools.formatOnSave` | Format PHP files on save  |
-| `magoPhpTools.lintOnSave`   | Lint PHP files on save    |
-
----
-
-## How mago Root Is Resolved
-
-For every operation (format / lint / analyze):
-
-1. Start from the current file’s directory
-2. Walk up parent folders
-3. Stop at the first folder containing `mago.toml`
-4. Run mago with that folder as `cwd`
-
-This allows:
-
-* Monorepos
-* Nested PHP projects
-* Multiple mago configs in one workspace
-
----
-
-## Supported File Types
-
-* `.php`
-
----
-
-## Requirements
-
-* `mago` installed and accessible in `PATH`
-* PHP project with `mago.toml`
-
----
 
 ## License
 
